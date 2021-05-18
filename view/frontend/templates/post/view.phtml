@@ -14,9 +14,9 @@
  */
 ?>
 <?php
-    $_post = $block->getPost();
-    $_postUrl = $_post->getPostUrl();
-    $_postName = $block->escapeHtml($_post->getTitle(), null);
+$_post = $block->getPost();
+$_postUrl = $_post->getPostUrl();
+$_postName = $block->escapeHtml($_post->getTitle(), null);
 ?>
 <div class="post-view">
     <div class="post-holder post-holder-<?= (int)$_post->getId() ?>">
@@ -34,10 +34,10 @@
             <div class="post-description clearfix">
                 <?php if ($featuredImage = $_post->getFeaturedImage()) { ?>
                     <?php
-                        $featuredImgAlt = $_post->getData('featured_img_alt');
-                        if (!$featuredImgAlt) {
-                            $featuredImgAlt = $_postName;
-                        }
+                    $featuredImgAlt = $_post->getData('featured_img_alt');
+                    if (!$featuredImgAlt) {
+                        $featuredImgAlt = $_postName;
+                    }
                     ?>
                     <div class="post-ftimg-hld">
                         <img src="<?= $block->escapeUrl($featuredImage) ?>"

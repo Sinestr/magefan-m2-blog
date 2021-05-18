@@ -28,12 +28,16 @@ class PostList extends \Magefan\Blog\Block\Post\PostList\AbstractList
      */
     protected function _prepareLayout()
     {
-        $page = $this->_request->getParam(
+        $page = (int)$this->_request->getParam(
             \Magefan\Blog\Block\Post\PostList\Toolbar::PAGE_PARM_NAME
         );
 
         if ($page > 1) {
             $this->pageConfig->setRobots('NOINDEX,FOLLOW');
+
+            $this->pageConfig->getTitle()->set(
+                $this->pageConfig->getTitle()->get() . ' - ' . __('Page') . ' ' . $page
+            );
         }
 
         return parent::_prepareLayout();
@@ -48,6 +52,34 @@ class PostList extends \Magefan\Blog\Block\Post\PostList\AbstractList
     {
         return $this->getChildBlock('blog.posts.list.item')->setPost($post)->toHtml();
     }
+
+    /**
+     * Get relevant path to template
+     *
+     * @return string
+     */
+    public function getTemplate()
+    {
+        if ($template = $this->templatePool->getTemplate('blog_post_list', $this->getPostTemplateType())) {
+            $this->_template = $template;
+        }
+
+        return parent::getTemplate();
+    }
+
+    /**
+     * Get template type
+     *
+     * @return string
+     */
+    protected function getPostTemplateType()
+    {
+        return (string)$this->_scopeConfig->getValue(
+            'mfblog/post_list/template',
+            \Magento\Store\Model\ScopeInterface::SCOPE_STORE
+        );
+    }
+
 
     /**
      * Retrieve Toolbar Block
@@ -141,10 +173,6 @@ class PostList extends \Magefan\Blog\Block\Post\PostList\AbstractList
      */
     protected function getBreadcrumbsBlock()
     {
-        if ($this->_scopeConfig->getValue('web/default/show_cms_breadcrumbs', ScopeInterface::SCOPE_STORE)) {
-            return $this->getLayout()->getBlock('breadcrumbs');
-        }
-
-        return false;
+        return $this->getLayout()->getBlock('breadcrumbs');
     }
 }

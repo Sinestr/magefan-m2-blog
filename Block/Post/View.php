@@ -72,8 +72,7 @@ class View extends AbstractPost implements \Magento\Framework\DataObject\Identit
      */
     protected function _addBreadcrumbs($title = null, $key = null)
     {
-        if ($this->_scopeConfig->getValue('web/default/show_cms_breadcrumbs', ScopeInterface::SCOPE_STORE)
-            && ($breadcrumbsBlock = $this->getLayout()->getBlock('breadcrumbs'))
+        if ($breadcrumbsBlock = $this->getLayout()->getBlock('breadcrumbs')
         ) {
             $breadcrumbsBlock->addCrumb(
                 'home',
@@ -118,5 +117,22 @@ class View extends AbstractPost implements \Magento\Framework\DataObject\Identit
                 'title' => $title
             ]);
         }
+    }
+
+    /**
+     * Get relevant path to template
+     *
+     * @return string
+     */
+    public function getTemplate()
+    {
+        $templateName = (string)$this->_scopeConfig->getValue(
+            'mfblog/post_view/design/template',
+            \Magento\Store\Model\ScopeInterface::SCOPE_STORE
+        );
+        if ($template = $this->templatePool->getTemplate('blog_post_view', $templateName)) {
+            $this->_template = $template;
+        }
+        return parent::getTemplate();
     }
 }
